@@ -69,7 +69,7 @@ To run the app locally:
 Clone the repository:
 
 ```
-git clone  (https://github.com/akashdubey2211/frontend-assignment
+git clone  https://github.com/akashdubey2211/frontend-assignment
 ```
 
 ```

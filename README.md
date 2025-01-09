@@ -65,10 +65,11 @@ To run the app locally:
 
 Clone the repository:
 
-bash
+```bash
 Copy code
 git clone [<repository-url>](https://github.com/akashdubey2211/frontend-assignment)
 Navigate to the project directory:
+```
 
 bash
 cd frontend-assignment

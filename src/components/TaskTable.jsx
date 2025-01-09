@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { Table, Input, Button, Spin, message } from "antd";
-import TaskModal from "./TaskModal"; // Import the TaskModal
+import React, { useState, useContext } from "react";
+import { Table, Input, Button, message } from "antd";
+import TaskModal from "./TaskModal";
+import { TaskContext } from "../context/TaskContext";
 import "../assets/styles/TaskTable.css";
 
-const TaskTable = ({ tasks, fetchMoreTasks }) => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(tasks || []); // Fallback to an empty array if tasks is undefined
-  const [searchQuery, setSearchQuery] = useState(localStorage.getItem("searchQuery") || "");
-  const [sortOrder, setSortOrder] = useState(localStorage.getItem("sortOrder") || "ascend");
-  const [sortedData, setSortedData] = useState([]);
+const TaskTable = ({ status }) => {
+  const { tasks, updateTaskStatus } = useContext(TaskContext);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sorter, setSorter] = useState({});
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
   const columns = [
     { title: "ID", dataIndex: "id" },
-    { title: "Name", dataIndex: "name" },
+    { title: "Name", dataIndex: "name", sorter: true },
     { title: "Priority", dataIndex: "priority" },
     { title: "Status", dataIndex: "status" },
     { title: "Assignee", dataIndex: "assignee" },
-    { title: "Due Date", dataIndex: "dueDate" },
+    { title: "Due Date", dataIndex: "dueDate", sorter: true },
     { title: "Comment", dataIndex: "comment" },
-    { title: "Created At", dataIndex: "createdAt" },
+    { title: "Created At", dataIndex: "createdAt", sorter: true },
     {
       title: "Actions",
       render: (record) => (
@@ -35,40 +35,6 @@ const TaskTable = ({ tasks, fetchMoreTasks }) => {
     },
   ];
 
-  const handleScroll = (e) => {
-    const bottom = e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight;
-
-    if (bottom && !loading) {
-      setLoading(true);
-      fetchMoreTasks()
-        .then((newTasks) => {
-          setData((prevData) => [...prevData, ...newTasks]);
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    }
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    localStorage.setItem("searchQuery", e.target.value);
-  };
-
-  const handleClearSearch = () => {
-    setSearchQuery("");
-    localStorage.removeItem("searchQuery");
-  };
-
-  const handleSortChange = (order) => {
-    setSortOrder(order);
-    localStorage.setItem("sortOrder", order);
-  };
-
-  const handleClearSort = () => {
-    setSortOrder("ascend");
-    localStorage.removeItem("sortOrder");
-  };
-
   const handleOpenModal = (task) => {
     setSelectedTask(task);
     setIsModalVisible(true);
@@ -81,69 +47,44 @@ const TaskTable = ({ tasks, fetchMoreTasks }) => {
 
   const handleStatusChange = (newStatus, comment) => {
     message.success(`Task status updated to ${newStatus}`);
-    // Update the task status and comment in the table
-    const updatedTasks = data.map((task) =>
-      task.id === selectedTask.id ? { ...task, status: newStatus.toLowerCase(), comment } : task
-    );
-    setData(updatedTasks);
+    updateTaskStatus(selectedTask.id, newStatus, comment);
     handleCloseModal();
   };
 
-  useEffect(() => {
-    // Ensure tasks is not undefined
-    if (tasks && Array.isArray(tasks)) {
-      setData(tasks);
-    }
-  }, [tasks]);
+  const handleTableChange = (pagination, filters, sorter) => {
+    setSorter(sorter);
+  };
 
-  useEffect(() => {
-    if (data) {
-      // Apply search filter
-      const filteredData = data.filter((task) =>
+  const filteredData = tasks
+    .filter(
+      (task) =>
+        task.status === status &&
         task.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-      // Sort the data based on "Created At"
-      const sortedFilteredData = filteredData.sort((a, b) => {
-        const dateA = new Date(a.createdAt);
-        const dateB = new Date(b.createdAt);
-        return sortOrder === "ascend" ? dateA - dateB : dateB - dateA;
-      });
-
-      setSortedData(sortedFilteredData);
-    }
-  }, [data, searchQuery, sortOrder]);
+    )
+    .sort((a, b) => {
+      if (sorter.order === "ascend") {
+        return a[sorter.field] > b[sorter.field] ? 1 : -1;
+      } else if (sorter.order === "descend") {
+        return a[sorter.field] < b[sorter.field] ? 1 : -1;
+      }
+      return 0;
+    });
 
   return (
-    <div style={{ overflowY: "auto", height: "400px" }} onScroll={handleScroll}>
-      <div style={{ marginBottom: "16px", marginTop: "16px" }}>
-        <Input
-          placeholder="Search by Name"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          style={{ width: "200px", marginRight: "8px" }}
-        />
-        <Button onClick={handleClearSearch} style={{ marginRight: "8px" }}>
-          Clear Search
-        </Button>
-        <Button
-          onClick={() => handleSortChange(sortOrder === "ascend" ? "descend" : "ascend")}
-        >
-          Sort by Created At ({sortOrder === "ascend" ? "Ascending" : "Descending"})
-        </Button>
-        <Button onClick={handleClearSort} style={{ marginLeft: "8px" }}>
-          Clear Sort
-        </Button>
-      </div>
+    <div>
+      <Input
+        placeholder="Search by Name"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        style={{ width: "300px", marginBottom: "16px",marginTop: "16px" }}
+      />
       <Table
-        style={{ margin: "8px 0px" }}
-        dataSource={sortedData}
+        dataSource={filteredData}
         columns={columns}
         rowKey="id"
-        pagination={false}
-        footer={() => loading && <Spin />}
+        pagination={{ pageSize: 10 }}
+        onChange={handleTableChange}
       />
-      {/* Task Modal */}
       {selectedTask && (
         <TaskModal
           isVisible={isModalVisible}

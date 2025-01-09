@@ -1,46 +1,31 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Tabs, Tab } from "@mui/material";
+import React, { useState, useContext } from "react";
+import { Tabs } from "antd";
 import { TaskContext } from "../context/TaskContext";
-import OpenTasks from "../pages/OpenTasks";
-import InProgressTasks from "../pages/InProgressTasks";
-import ClosedTasks from "../pages/ClosedTasks";
+import TaskTable from "./TaskTable";
 
-const TabPanel = ({ value, index, children }) => {
-  return value === index ? <div>{children}</div> : null;
-};
+const { TabPane } = Tabs;
 
 const TaskTabs = () => {
-  const { tasks, loadTasks, taskOpenCounts, taskCloseCounts, taskInprogressCounts } = useContext(TaskContext);
-  const [activeTab, setActiveTab] = useState(2);  // Set initial tab to "Closed" (index 2)
+  const { taskOpenCounts, taskInprogressCounts, taskCloseCounts } = useContext(TaskContext);
+  const [activeTab, setActiveTab] = useState("open");
 
-  // This effect will load tasks for each status once when the component mounts
-  useEffect(() => {
-    loadTasks("open");
-    loadTasks("in-progress");
-    loadTasks("closed");
-  }, [loadTasks]);
-
-  const handleTabChange = (event, newValue) => {
-    setActiveTab(newValue); // Update active tab on user interaction
+  const handleTabChange = (key) => {
+    setActiveTab(key);
   };
 
   return (
     <div>
-      <Tabs value={activeTab} onChange={handleTabChange} aria-label="task tabs">
-        <Tab label={`Open (${taskOpenCounts || 0})`} />
-        <Tab label={`In Progress (${taskInprogressCounts || 0})`} />
-        <Tab label={`Closed (${taskCloseCounts || 0})`} />
+      <Tabs activeKey={activeTab} onChange={handleTabChange}>
+        <TabPane tab={`Open (${taskOpenCounts})`} key="open">
+          <TaskTable status="open" />
+        </TabPane>
+        <TabPane tab={`In Progress (${taskInprogressCounts})`} key="in-progress">
+          <TaskTable status="in-progress" />
+        </TabPane>
+        <TabPane tab={`Closed (${taskCloseCounts})`} key="closed">
+          <TaskTable status="closed" />
+        </TabPane>
       </Tabs>
-
-      <TabPanel value={activeTab} index={0}>
-        <OpenTasks />
-      </TabPanel>
-      <TabPanel value={activeTab} index={1}>
-        <InProgressTasks />
-      </TabPanel>
-      <TabPanel value={activeTab} index={2}>
-        <ClosedTasks />
-      </TabPanel>
     </div>
   );
 };

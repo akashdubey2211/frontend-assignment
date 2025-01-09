@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Table, Input, Button, Spin } from "antd";
+import { Table, Input, Button, Spin, message } from "antd";
+import TaskModal from "./TaskModal"; // Import the TaskModal
+import "../assets/styles/TaskTable.css";
 
 const TaskTable = ({ tasks, fetchMoreTasks }) => {
   const [loading, setLoading] = useState(false);
@@ -7,6 +9,8 @@ const TaskTable = ({ tasks, fetchMoreTasks }) => {
   const [searchQuery, setSearchQuery] = useState(localStorage.getItem("searchQuery") || "");
   const [sortOrder, setSortOrder] = useState(localStorage.getItem("sortOrder") || "ascend");
   const [sortedData, setSortedData] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const columns = [
     { title: "ID", dataIndex: "id" },
@@ -15,12 +19,23 @@ const TaskTable = ({ tasks, fetchMoreTasks }) => {
     { title: "Assignee", dataIndex: "assignee" },
     { title: "Due Date", dataIndex: "dueDate" },
     { title: "Created At", dataIndex: "createdAt" },
+    {
+      title: "Actions",
+      render: (record) => (
+        <Button
+          type="link"
+          onClick={() => handleOpenModal(record)}
+          style={{ color: "#1677ff" }}
+        >
+          View/Edit
+        </Button>
+      ),
+    },
   ];
 
   const handleScroll = (e) => {
-    const bottom =
-      e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight;
-    
+    const bottom = e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight;
+
     if (bottom && !loading) {
       setLoading(true);
       fetchMoreTasks()
@@ -50,6 +65,26 @@ const TaskTable = ({ tasks, fetchMoreTasks }) => {
   const handleClearSort = () => {
     setSortOrder("ascend");
     localStorage.removeItem("sortOrder");
+  };
+
+  const handleOpenModal = (task) => {
+    setSelectedTask(task);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    setSelectedTask(null);
+  };
+
+  const handleStatusChange = (newStatus, comment) => {
+    message.success(`Task status updated to ${newStatus}`);
+    // Update the task status and comment in the table
+    const updatedTasks = data.map((task) =>
+      task.id === selectedTask.id ? { ...task, status: newStatus, comment } : task
+    );
+    setData(updatedTasks);
+    handleCloseModal();
   };
 
   useEffect(() => {
@@ -84,7 +119,9 @@ const TaskTable = ({ tasks, fetchMoreTasks }) => {
         <Button onClick={handleClearSearch} style={{ marginRight: "8px" }}>
           Clear Search
         </Button>
-        <Button onClick={() => handleSortChange(sortOrder === "ascend" ? "descend" : "ascend")}>
+        <Button
+          onClick={() => handleSortChange(sortOrder === "ascend" ? "descend" : "ascend")}
+        >
           Sort by Created At ({sortOrder === "ascend" ? "Ascending" : "Descending"})
         </Button>
         <Button onClick={handleClearSort} style={{ marginLeft: "8px" }}>
@@ -92,13 +129,22 @@ const TaskTable = ({ tasks, fetchMoreTasks }) => {
         </Button>
       </div>
       <Table
-        style={{  margin: "8px 0px" }}
+        style={{ margin: "8px 0px" }}
         dataSource={sortedData}
         columns={columns}
         rowKey="id"
         pagination={false}
         footer={() => loading && <Spin />}
       />
+      {/* Task Modal */}
+      {selectedTask && (
+        <TaskModal
+          isVisible={isModalVisible}
+          task={selectedTask}
+          onClose={handleCloseModal}
+          onStatusChange={handleStatusChange}
+        />
+      )}
     </div>
   );
 };

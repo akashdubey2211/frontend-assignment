@@ -1,137 +1,140 @@
 ***Task Management App***
-This app provides a task management system with multiple views, allowing users to manage and track tasks based on their status (Open, In Progress, and Closed). It offers a table-based interface with powerful sorting, search, and keyboard navigation features, making it efficient to interact with the tasks. The app also includes a focus mode (modal view) to view and edit task details, including the ability to change task status and leave comments.
 
-***Features***
-Task Views (3 Tabs)
+This app helps users manage tasks effectively, categorized into Open, In Progress, and Closed statuses. It features an intuitive table-based interface with search, sorting, and keyboard navigation. Users can view and edit task details in a focus mode (modal), including changing task statuses and adding comments.
 
-Tabs: Displays three views—Open, In Progress, and Closed tasks.
+***Key Features -***
 
-Each tab displays the count of tasks with their corresponding status.
-The open tab is the default view.
+***1. Task Views (Tabs)***
 
-***Persistence***: The selected tab remains the same after a page reload.
-***Sorting & Search***: Retains sorting and search state when switching tabs.
+Three tabs: Open, In Progress, and Closed.
+Default tab: Open.
+Displays the task count for each status.
+Tabs and their settings persist across page reloads.
 
-***Task Table***
-Table Columns:
-Priority, ID, Status, Labels, Name, Due Date, Created At, Assignee.
-Pagination: Supports infinite scroll pagination.
-Keyboard Navigation:
-Up/Down Arrow Keys: Navigate through the task list.
-Enter Key: Open the task in focus mode (modal view).
-Global Controls
-***Sorting:***
-Sort tasks based on the Created At field.
-The sorting choice persists after the page reloads.
-Option to clear sorting.
+***2. Task Table***
+Columns: Priority, ID, Status, Labels, Name, Due Date, Created At, Assignee.
+Infinite scroll pagination: Loads more tasks as you scroll.
+Keyboard navigation:
+Up/Down Arrow Keys: Navigate tasks.
+Enter Key: Open a task in focus mode.
 
-***Search:***
-Search tasks by Name.
-Search input persists after the page reloads.
-Option to clear search.
-Task Status Change
+***3. Sorting & Search***
+Sorting: By "Created At" (persistent after reload).
+Search: By task name (persistent after reload).
+Options to clear sorting and search.
+
+***4. Focus Mode (Modal)***
+
+Task Details: View task info and comments.
+Actions:
+Change task status (Open, In Progress, or Closed).
+Leave/update comments for status changes.
+Keyboard Shortcuts:
+Left/Right Arrow Keys: Navigate tasks in modal.
+Number Keys (1/2/3): Change status to Open, In Progress, or Closed.
+
+***5. Task Status Management***
 When a task's status changes:
-The task is removed from the current tab.
-The task appears in the appropriate tab based on the updated status when switching tabs.
-Task in Focus Mode (Modal View)
-Modal View: When a task is clicked or pressed with Enter, a modal opens displaying the task's details and comments.
-
-***Actions in Modal:***
-Task status can be changed to Open, In Progress, or Closed, and vice versa.
-A confirmation modal requests the user to add a comment before changing the task status. The comment is task-specific and can be updated if one already exists.
-Keyboard Navigation in Modal:
-
-Left/Right Arrow Keys: Navigate between tasks in focus mode.
+It moves to the appropriate tab.
+The task remains visible in focus mode during navigation.
 
 
-***Number Keys:***
-1: Change task status to Open.
-2: Change task status to In Progress.
-3: Change task status to Closed.
+***System Design Basics -***
+
+**1. Architecture Overview**
+The app follows a client-server architecture.
+
+***Frontend:***
+Built with React for a dynamic and responsive user interface.
+Context API manages global state (tasks, search, and sorting).
+Uses localStorage for persisting user preferences like selected tabs, search terms, and sorting options.
+
+***Backend (Optional):***
+A Node.js/Express backend can be integrated for persistent storage.
+Stores task data, comments, and user actions in a relational database (e.g., PostgreSQL) or NoSQL database (e.g., MongoDB).
+Backend APIs handle operations like fetching tasks, updating statuses, and storing comments.
+Database Schema (Example):
+
+***Tasks Table:***
+
+id (Primary Key)
+name (Task Name)
+status (Open/In Progress/Closed)
+priority (High/Medium/Low)
+labels (Array of tags)
+due_date (Deadline)
+created_at (Timestamp)
+assignee (Assigned user)
+
+***Comments Table:***
+
+id (Primary Key)
+task_id (Foreign Key to Tasks Table)
+comment (Text)
+created_at (Timestamp)
+
+***2. Data Flow***
+Frontend:
+
+Fetches tasks from the backend via REST APIs or GraphQL.
+Updates task statuses and comments in real time, sending changes to the backend.
+
+***Backend:***
+
+Serves task data to the frontend.
+Handles updates to task statuses and stores comments.
+
+***3. Key Components***
 
 
-***Status Change:***
-The task remains in focus mode during navigation.
-The task remains visible in the current tab after the status change.
-The task has been removed from the background table and is correctly placed in the updated tab.
+***Client-Side Logic:***
+React components for displaying tasks in tabs, a table, and modals.
+Local state for managing UI interactions.
+
+***Backend Services (Optional):***
+
+***Task Service:*** Fetches, updates, and filters tasks.
+
+***Comment Service:*** Manages comments for tasks.
+
+***Database:***
+Tasks and comments are stored with relationships to ensure data integrity.
+
+***4. Scalability Considerations***
+
+***Frontend:*** 
+Use efficient state management libraries like Redux for large-scale apps.
+
+***Backend:*** Use caching (e.g., Redis) for frequently accessed data like tasks.
+
+***Database:*** Index columns used in sorting and searching (e.g., created_at, name).
+
+***Technologies Used -***
+
+***React:*** For building the interface.
+
+***Ant Design:*** For UI components like tables and modals.
+
+***Mocked Data:*** Simulates task data.
+
+***Installation -***
+
+Clone and run the app locally:
 
 
-***Technologies Used***
-React 19: For building the user interface.
-Ant Design: For UI components like tables, modals, and more.
-Context API: For global state management (task data, search, sorting, etc.).
-Mocked Data: Used mocked data for simulating tasks.
-
-
-Installation
-To run the app locally:
-
-Clone the repository:
-
-```
-git clone  https://github.com/akashdubey2211/frontend-assignment
-```
-
-```
+```git clone https://github.com/akashdubey2211/frontend-assignment
 cd frontend-assignment
-```
-
-```
 npm install
-```
-
-```
 npm run dev
+Open http://localhost:5173/ in your browser.
 ```
 
-```
-http://localhost:5173/
-```
+***Summary -***
 
+View tasks by status (Open, In Progress, Closed).
+Sort and search tasks with settings that persist after reloads.
+Edit tasks in focus mode (modal) with status updates and comments.
+System Design: The app can optionally integrate a backend for persistent data storage and scalability.
 
+***Feel free to reach out for more details – Thank you!***
 
-***Task Management App - Simple System Design***
-Purpose:
-The app helps manage tasks by showing them in 3 categories: Open, In Progress, and Closed. Users can update the status of tasks, search, and sort them. Tasks can also be viewed in detail in a pop-up window.
-
-1. App Components:
-Tabs for Task Status:
-There are 3 tabs for tasks: Open, In Progress, and Closed.
-The Open tab is selected by default, and the app remembers which tab you choose even after refreshing the page.
-
-***Task Table:***
-
-Shows tasks in a table format.
-You can sort tasks by their creation date and search by task name.
-The table has infinite scroll, meaning more tasks load as you scroll down.
-Task Focus Mode (Modal):
-
-When you click on a task, a pop-up window shows the task details and comments.
-You can change the task’s status (Open, In Progress, or Closed) and leave a comment.
-2. How It Works:
-Tabs: When you click a tab (like Open), it shows tasks of that status. If you change a task’s status (e.g., from Open to In Progress), it moves to the right tab.
-
-***Sorting and Searching:***
-
-You can sort tasks by the date they were created.
-You can search tasks by name. These settings stay the same even after you refresh the page.
-Focus Mode:
-
-Clicking on a task or pressing Enter opens the task details in a modal (pop-up).
-You can change the task’s status in the modal, and leave a comment explaining the change.
-
-3. Storing Data:
-The app remembers things like which tab is selected and your search settings using localStorage (so settings stay after a page refresh).
-4. Optional Backend:
-If you want to store tasks and comments permanently, you can have a backend (server) where tasks are saved. The app would send requests to this server to fetch and update task data.
-
-***Summary:***
-The app shows tasks by status (Open, In Progress, Closed).
-You can sort and search tasks, and these settings stay even after refreshing.
-Clicking on a task opens a detailed view where you can change its status and leave a comment.
-The app is built with React and remembers your settings using localStorage.
-
-
-This design keeps it simple and focused on the task management features you need!
-
-***Feel Free reach out to me for any details - Thank you***

@@ -122,7 +122,8 @@ Use efficient state management libraries like Redux for large-scale apps.
 Clone and run the app locally:
 
 
-```git clone https://github.com/akashdubey2211/frontend-assignment
+```
+git clone https://github.com/akashdubey2211/frontend-assignment
 cd frontend-assignment
 npm install
 npm run dev

@@ -70,22 +70,18 @@ Clone the repository:
 
 ```
 git clone  (https://github.com/akashdubey2211/frontend-assignment
-Navigate to the project directory:
 ```
 
 ```
 cd frontend-assignment
-Install dependencies:
 ```
 
 ```
 npm install
-Start the development server:
 ```
 
 ```
 npm run dev
-Open the app in your browser:
 ```
 
 ```

@@ -5,7 +5,7 @@ import "../assets/styles/TaskTable.css";
 
 const TaskTable = ({ tasks, fetchMoreTasks }) => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(tasks);
+  const [data, setData] = useState(tasks || []); // Fallback to an empty array if tasks is undefined
   const [searchQuery, setSearchQuery] = useState(localStorage.getItem("searchQuery") || "");
   const [sortOrder, setSortOrder] = useState(localStorage.getItem("sortOrder") || "ascend");
   const [sortedData, setSortedData] = useState([]);
@@ -83,31 +83,36 @@ const TaskTable = ({ tasks, fetchMoreTasks }) => {
     message.success(`Task status updated to ${newStatus}`);
     // Update the task status and comment in the table
     const updatedTasks = data.map((task) =>
-      task.id === selectedTask.id ? { ...task, status: newStatus, comment } : task
+      task.id === selectedTask.id ? { ...task, status: newStatus.toLowerCase(), comment } : task
     );
     setData(updatedTasks);
     handleCloseModal();
   };
 
   useEffect(() => {
-    // Apply search filter
-    const filteredData = tasks.filter((task) =>
-      task.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    // Sort the data based on "Created At"
-    const sortedFilteredData = filteredData.sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
-      return sortOrder === "ascend" ? dateA - dateB : dateB - dateA;
-    });
-
-    setSortedData(sortedFilteredData);
-  }, [tasks, searchQuery, sortOrder]);
+    // Ensure tasks is not undefined
+    if (tasks && Array.isArray(tasks)) {
+      setData(tasks);
+    }
+  }, [tasks]);
 
   useEffect(() => {
-    setData(tasks);
-  }, [tasks]);
+    if (data) {
+      // Apply search filter
+      const filteredData = data.filter((task) =>
+        task.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      // Sort the data based on "Created At"
+      const sortedFilteredData = filteredData.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return sortOrder === "ascend" ? dateA - dateB : dateB - dateA;
+      });
+
+      setSortedData(sortedFilteredData);
+    }
+  }, [data, searchQuery, sortOrder]);
 
   return (
     <div style={{ overflowY: "auto", height: "400px" }} onScroll={handleScroll}>

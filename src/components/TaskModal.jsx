@@ -68,9 +68,9 @@ const TaskModal = ({ isVisible, task, onClose, onStatusChange }) => {
                   style={{
                     margin: "4px 0",
                     color:
-                      newStatus === "Open"
+                      newStatus === "open"
                         ? "#52c41a"
-                        : newStatus === "In Progress"
+                        : newStatus === "in progress"
                         ? "#faad14"
                         : "#ff4d4f",
                     fontSize: "14px",
@@ -79,19 +79,19 @@ const TaskModal = ({ isVisible, task, onClose, onStatusChange }) => {
                   {newStatus}
                 </p>
                 <Button
-                  onClick={() => handleStatusChange("Open")}
+                  onClick={() => handleStatusChange("open")}
                   style={{ margin: "4px", width: "70px" }}
                 >
                   Open
                 </Button>
                 <Button
-                  onClick={() => handleStatusChange("In Progress")}
+                  onClick={() => handleStatusChange("in progress")}
                   style={{ margin: "4px", width: "120px" }}
                 >
                   In Progress
                 </Button>
                 <Button
-                  onClick={() => handleStatusChange("Closed")}
+                  onClick={() => handleStatusChange("closed")}
                   style={{ margin: "4px", width: "80px" }}
                 >
                   Closed

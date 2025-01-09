@@ -6,8 +6,8 @@ Task Views (3 Tabs)
 
 Tabs: Displays three views—Open, In Progress, and Closed tasks.
 
-Each tab displays the count of tasks with its corresponding status.
-Open tab is the default view.
+Each tab displays the count of tasks with their corresponding status.
+The open tab is the default view.
 
 ***Persistence***: The selected tab remains the same after a page reload.
 ***Sorting & Search***: Retains sorting and search state when switching tabs.
@@ -22,12 +22,12 @@ Enter Key: Open the task in focus mode (modal view).
 Global Controls
 ***Sorting:***
 Sort tasks based on the Created At field.
-Sorting choice persists after page reload.
+The sorting choice persists after the page reloads.
 Option to clear sorting.
 
 ***Search:***
 Search tasks by Name.
-Search input persists after page reload.
+Search input persists after the page reloads.
 Option to clear search.
 Task Status Change
 When a task's status changes:
@@ -43,15 +43,18 @@ Keyboard Navigation in Modal:
 
 Left/Right Arrow Keys: Navigate between tasks in focus mode.
 
+
 ***Number Keys:***
 1: Change task status to Open.
 2: Change task status to In Progress.
 3: Change task status to Closed.
 
+
 ***Status Change:***
-Task remains in focus mode during navigation.
-Task remains visible in the current tab after status change.
-Task is removed from the background table and correctly placed in the updated tab.
+The task remains in focus mode during navigation.
+The task remains visible in the current tab after the status change.
+The task has been removed from the background table and is correctly placed in the updated tab.
+
 
 ***Technologies Used***
 React 19: For building the user interface.
@@ -66,25 +69,29 @@ To run the app locally:
 Clone the repository:
 
 ```bash
-Copy code
 git clone [<repository-url>](https://github.com/akashdubey2211/frontend-assignment)
 Navigate to the project directory:
 ```
 
-bash
+```bash
 cd frontend-assignment
 Install dependencies:
-
+```
+```
 bash
 npm install
 Start the development server:
-
+```
+```
 bash
 npm run dev
 Open the app in your browser:
+```
 
+```
 bash
 http://localhost:5173/
+```
 
 
 

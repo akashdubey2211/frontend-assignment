@@ -10,8 +10,9 @@ const TabPanel = ({ value, index, children }) => {
 };
 
 const TaskTabs = () => {
-  const { tasks, loadTasks, taskOpenCounts ,taskCloseCounts,taskInprogressCounts} = useContext(TaskContext);
-  const [activeTab, setActiveTab] = useState(0);
+  const { tasks, loadTasks, taskOpenCounts, taskCloseCounts, taskInprogressCounts } = useContext(TaskContext);
+  const [activeTab, setActiveTab] = useState(2);  // Set initial tab to "Closed" (index 2)
+
   // This effect will load tasks for each status once when the component mounts
   useEffect(() => {
     loadTasks("open");
@@ -20,15 +21,15 @@ const TaskTabs = () => {
   }, [loadTasks]);
 
   const handleTabChange = (event, newValue) => {
-    setActiveTab(newValue);
+    setActiveTab(newValue); // Update active tab on user interaction
   };
 
   return (
     <div>
       <Tabs value={activeTab} onChange={handleTabChange} aria-label="task tabs">
         <Tab label={`Open (${taskOpenCounts || 0})`} />
-        <Tab label={`In Progress (${taskCloseCounts || 0})`} />
-        <Tab label={`Closed (${taskInprogressCounts || 0})`} />
+        <Tab label={`In Progress (${taskInprogressCounts || 0})`} />
+        <Tab label={`Closed (${taskCloseCounts || 0})`} />
       </Tabs>
 
       <TabPanel value={activeTab} index={0}>

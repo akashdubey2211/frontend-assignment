@@ -68,28 +68,27 @@ To run the app locally:
 
 Clone the repository:
 
-```bash
-git clone [<repository-url>](https://github.com/akashdubey2211/frontend-assignment)
+```
+git clone  (https://github.com/akashdubey2211/frontend-assignment
 Navigate to the project directory:
 ```
 
-```bash
+```
 cd frontend-assignment
 Install dependencies:
 ```
+
 ```
-bash
 npm install
 Start the development server:
 ```
+
 ```
-bash
 npm run dev
 Open the app in your browser:
 ```
 
 ```
-bash
 http://localhost:5173/
 ```
 

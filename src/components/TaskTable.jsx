@@ -16,8 +16,10 @@ const TaskTable = ({ tasks, fetchMoreTasks }) => {
     { title: "ID", dataIndex: "id" },
     { title: "Name", dataIndex: "name" },
     { title: "Priority", dataIndex: "priority" },
+    { title: "Status", dataIndex: "status" },
     { title: "Assignee", dataIndex: "assignee" },
     { title: "Due Date", dataIndex: "dueDate" },
+    { title: "Comment", dataIndex: "comment" },
     { title: "Created At", dataIndex: "createdAt" },
     {
       title: "Actions",
